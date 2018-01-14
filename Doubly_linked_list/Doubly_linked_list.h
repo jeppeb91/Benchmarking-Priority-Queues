@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+
 typedef struct queue{
 	int size;
 	float average;
@@ -30,10 +31,9 @@ queue* make_queue(){
 	q->last = NULL;	
 	return q;
 }
-void insert(queue* q, int priority, int value){
-	node* e = make_node();
-	e->prio = priority;
-	e->val = value;	
+
+void insert_node(queue* q, node* e){
+	int priority = e->prio;	
 	int old_size = q->size;	
 	int new_size = old_size + 1;	
 	float old_average = q->average;
@@ -42,24 +42,21 @@ void insert(queue* q, int priority, int value){
 		q->first = e;
 		q->last = e;
 	}else{				
-		printf("%f\n", old_average);		
-		if(priority>old_average){
-			printf("%f\n", old_average);			
-			//Seek from highest prio
+		if(priority > old_average){			
+			//Seek from highest prio			
 			node* current = q->last;			
 			while(current->prio >= priority){				
-				printf("%d\n", current->prio);											
 				current = current->prev;			
 				if(current->prev == NULL){
 					//If no node with lower					
 					e->next = current;					
-					e->prev = make_node();					
+					e->prev = NULL;					
 					q->first = e;				
 					break;
 				}					
 			}
 			if(current == q->last){					
-				//if none after				
+				//if no node with higher				
 				current->next = e;				
 				e->prev = q->last;
 				q->last = e;						
@@ -71,30 +68,51 @@ void insert(queue* q, int priority, int value){
 				current->next = e;				
 				e->prev = current;											
 			 }
+		}else{		
+			node* current = q->first;			
+			while(current->prio < priority){				
+				current = current->next;			
+			}			
+			if(current == q->first){					
+				//if none before				
+				current->prev = e;					
+				e->prev = NULL;
+				q->first = e;						
+			}else{
+				//If its supposed to go between two
+				e->next = current->next;				
+				node* after_e = current->next;					
+				after_e->prev = e;				
+				current->next = e;				
+				e->prev = current;											
+			 }
 		}	
 	}	
-
+	//General status updates which are common regardless of input
 	float new_average = (float)(old_size*old_average + priority)/new_size;
 	q->average = new_average;
 	q->size = new_size;	
 }
-void iterqueue(node* n){
-	//This method iterates through and prints a queue from its last element to its first
-	//For testing purposes only	
-	printf("%d : %d\n", n->prio, n->val);
-	if(n->prev == NULL){
-		return;
-	}	
-	iterqueue(n->prev);
+void insert_kv(queue* q, int priority, int value){
+	//Inserts a new node with given priority and value in q	
+	node* e =  make_node();
+	e->prio = priority;
+	e->val = value;		
+	insert_node(q, e);
 }
-int main(){
-	int ITERATIONS = 100;	
-	queue* q = make_queue();		
-	for(int i = 1; i < ITERATIONS; i++){
-		insert(q, i, i);
-	}	
-	insert(q, 51, 1337);	
-	node* o = q->last;	
-	iterqueue(o);		
-	return 0;
+node* pop(queue* q){	
+	//Pops the lowest priority from the queue
+	//For to equal priorities FIFO	
+	node* new_first = q->first->next;	
+	node* e = q->first;
+	e->next = NULL; 	
+	e->prev = NULL;
+	free(e->next);
+	free(e->prev);	
+	new_first->prev = NULL;
+	free(new_first->prev);	
+	q->first = new_first;		
+	return e;
 }
+
+
