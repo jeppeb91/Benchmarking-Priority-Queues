@@ -38,6 +38,6 @@ int main(){
 	q.last= &n_2;
 	
 	int i = 0;	
-	printf("%d\n", n_0.prio);
+	printf("%d\n", n_2.prio);
 	return 0;
 }
