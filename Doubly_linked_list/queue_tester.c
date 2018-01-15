@@ -1,8 +1,7 @@
 #include "Doubly_linked_list.h"
 int test_down(node* n, int min){
 	//This method iterates through and prints a queue from its last element to its first
-	//For testing purposes only	
-	//printf("%d : %d\n", n->prio, n->val);
+	//printf("prio: %d Val: %d\n", n->prio, n->val);	
 	if(n->prev != NULL){
 		test_down(n->prev, min);
 	}else{
@@ -16,8 +15,7 @@ int test_down(node* n, int min){
 }	
 int test_up(node* n, int max){
 	//This method iterates through and prints a queue from its last element to its first
-	//For testing purposes only	
-	printf("%d : %d\n", n->prio, n->val);
+	//printf("prio: %d Val: %d\n", n->prio, n->val);		
 	if(n->next != NULL){
 		test_up(n->next, max);
 	}else{
@@ -36,24 +34,48 @@ int test_updown(queue* q){
 	int vals [size];
 	for(int i = 0; i < size; i++){
 		vals[i] = pop(q);
-		printf("Popped: %d, %d\n", vals[i], q->size);	
+		//printf("Popped: %d Size: %d\n", vals[i], q->size);	
 	}
 	for(int i = 0; i < size; i++){
-		insert_kv(q, i, vals[i]);	
+		insert_kv(q, i, i);	
+		//printf("Inserted: %d Size: %d\n", vals[i], q->size);	
 	}
-	return test_down(q->last, q->first->prio);
+	if (test_down(q->last, q->first->prio) || test_up(q->first, q->last->prio)){
+		return 1;
+	}
+	return 0;
 }
 
+int test_middle(queue* q){
+	int mean = (int) q->average;	
+	int size = q->size;	
+	int before = 0;
+	int current = 0;
+	int after = 0;	
+	insert_kv(q, mean, 1337); 	
+	test_down(q->last, q->first->prio);	
+	for(int i = 0; i < size; i++){
+		before = current;		
+		current = pop(q);
+		if(current == 1337){
+			after = pop(q);			
+			current = mean;			
+			break;
+		}
+	}	
+	//printf("Before: %d Middle(val): %d After: %d\n", before, current, after); 	
+	if(before > current || current > after){
+		return 0;
+	}		
+	return 1;	
+}
 int main(){
-	int ITERATIONS = 100000;	
+	int ITERATIONS = 100;	
 	queue* q = make_queue();		
-	for(int i = 1; i < ITERATIONS; i++){
+	for(int i = 0; i < ITERATIONS; i++){
 		insert_kv(q, i, i);
-	}								
-	printf("Down: %d\n", test_down(q->last, 1));	
-	printf("Up: %d\n", test_up(q->first, 99));		
-	//printf("Average: %d\n", test_average(q));
-	//printf("Inserts: %d\n", test_inserts(q));	
-	printf("Up/Down: %d\n", test_updown(q));	
+	}										
+	printf("Up/Down: %d\n", test_updown(q));
+	printf("Middle: %d\n", test_middle(q));		
 	return 0;
 }
