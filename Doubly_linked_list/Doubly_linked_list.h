@@ -10,7 +10,7 @@ typedef struct queue{
 }queue;
 
 typedef struct node{
-	int prio;
+	float prio;
 	int val;
 	struct node* next;
 	struct node* prev;
@@ -115,15 +115,24 @@ int pop(queue* q){
 	}	
 	if(q->size == 1){		
 		int value = q->first->val;				
+		float priority =q->first->prio;			
 		free(q->first);		
 		q->last = NULL;
 		q->first = NULL;	
-		q->size = 0;		
+		q->size = 0;			
+		
+		//update stats
+		int size = q->size;
+		float old_average = q->average;		
+		float new_average = (float)(old_average * size - priority)/(size -1);
+	
+		q->size = 0;
+		q->average = new_average;	
 		return value;	
 	}
 	node* new_first = q->first->next;	
 	int value = q->first->val;
-	int priority =q->first->prio;		
+	float priority =q->first->prio;		
 	new_first->prev = NULL;
 	free(q->first);	
 	q->first = new_first;		
