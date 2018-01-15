@@ -104,34 +104,38 @@ void insert_kv(queue* q, int priority, int value){
 	e->val = value;		
 	insert_node(q, e);
 }
-node* pop(queue* q){	
+int pop(queue* q){	
 	//Pops the lowest priority from the queue
 	//For to equal priorities FIFO	
 	if(q == NULL){
-		return NULL;
+		return -1337;
 	}	
 	if(q->size < 1){
-		return NULL;
+		return -1337;
 	}	
+	if(q->size == 1){		
+		int value = q->first->val;				
+		free(q->first);		
+		q->last = NULL;
+		q->first = NULL;	
+		q->size = 0;		
+		return value;	
+	}
 	node* new_first = q->first->next;	
-	node* e = q->first;
-	e->next = NULL; 	
-	e->prev = NULL;
-	free(e->next);
-	free(e->prev);	
+	int value = q->first->val;
+	int priority =q->first->prio;		
 	new_first->prev = NULL;
-	free(new_first->prev);	
+	free(q->first);	
 	q->first = new_first;		
 	
 	//update stats
 	int size = q->size;
-	int priority = e->prio;	
 	float old_average = q->average;		
 	float new_average = (float)(old_average * size - priority)/(size -1);
 	
 	q->size = size - 1;
 	q->average = new_average;
-	return e;
+	return value;
 }
 
 
