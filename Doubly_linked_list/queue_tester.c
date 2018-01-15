@@ -52,12 +52,12 @@ int test_middle(queue* q){
 	int before = 0;
 	int current = 0;
 	int after = 0;	
-	insert_kv(q, mean, 1337); 	
+	insert_kv(q, mean, 13371337); 	
 	test_down(q->last, q->first->prio);	
 	for(int i = 0; i < size; i++){
 		before = current;		
 		current = pop(q);
-		if(current == 1337){
+		if(current == 13371337){
 			after = pop(q);			
 			current = mean;			
 			break;
@@ -69,11 +69,17 @@ int test_middle(queue* q){
 	}		
 	return 1;	
 }
-int main(){
-	int ITERATIONS = 10;	
+int main(int argc, char **argv){
+	int ITERATIONS = 100000;	
 	queue* q = make_queue();		
+	node** nodes = malloc(sizeof(node*)*ITERATIONS);	
 	for(int i = 0; i < ITERATIONS; i++){
-		insert_kv(q, (float) i, i);
+		nodes[i] = make_node();
+		nodes[i]->prio = i;
+		nodes[i]->val = i;
+	}
+	for(int i = 0; i < ITERATIONS; i++){
+		insert_node(q, nodes[i]);
 	}										
 	printf("Up/Down: %d\n", test_updown(q));
 	printf("Middle: %d\n", test_middle(q));		

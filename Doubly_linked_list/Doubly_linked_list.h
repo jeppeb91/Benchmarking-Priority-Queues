@@ -122,12 +122,8 @@ int pop(queue* q){
 		q->size = 0;			
 		
 		//update stats
-		int size = q->size;
-		float old_average = q->average;		
-		float new_average = (float)(old_average * size - priority)/(size -1);
-	
 		q->size = 0;
-		q->average = new_average;	
+		q->average = 0;	
 		return value;	
 	}
 	node* new_first = q->first->next;	
