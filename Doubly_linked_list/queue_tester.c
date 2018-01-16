@@ -31,9 +31,9 @@ int test_up(node* n, int max){
 int test_updown(queue* q){
 	int size = q->size;	
 	test_up(q->first, 1);
-	int vals [size];
+	node* nodes [size];
 	for(int i = 0; i < size; i++){
-		vals[i] = pop(q);
+		nodes[i] = pop(q);
 		//printf("Popped: %d Size: %d\n", vals[i], q->size);	
 	}
 	for(int i = 0; i < size; i++){
@@ -49,28 +49,28 @@ int test_updown(queue* q){
 int test_middle(queue* q){
 	float mean = q->average;	
 	int size = q->size;	
-	int before = 0;
-	int current = 0;
-	int after = 0;	
+	node* before = NULL;
+	node* current = NULL;
+	node* after = NULL;	
 	insert_kv(q, mean, 13371337); 	
 	test_down(q->last, q->first->prio);	
 	for(int i = 0; i < size; i++){
 		before = current;		
 		current = pop(q);
-		if(current == 13371337){
+		if(current->val == 13371337){
 			after = pop(q);			
-			current = mean;			
+			current->val = mean;			
 			break;
 		}
 	}	
-	printf("Before: %d Middle(val): %d After: %d\n", before, current, after); 	
-	if(before > current || current > after){
+	printf("Before: %d Middle(val): %d After: %d\n", before->val, current->val, after->val); 	
+	if(before->val > current->val || current->val > after->val){
 		return 0;
 	}		
 	return 1;	
 }
 int main(int argc, char **argv){
-	int ITERATIONS = 100000;	
+	int ITERATIONS = 100;	
 	queue* q = make_queue();		
 	node** nodes = malloc(sizeof(node*)*ITERATIONS);	
 	for(int i = 0; i < ITERATIONS; i++){
@@ -83,5 +83,6 @@ int main(int argc, char **argv){
 	}										
 	printf("Up/Down: %d\n", test_updown(q));
 	printf("Middle: %d\n", test_middle(q));		
+	free(nodes);	
 	return 0;
 }
