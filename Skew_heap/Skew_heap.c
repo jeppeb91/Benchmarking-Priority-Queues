@@ -63,6 +63,60 @@ node* meld2(node* p, node* q, node* root) {
 	return root;
 }
 
+node* flip(node* p){
+	node* root = p;	
+	node* temp = NULL;
+	while(1){
+		printf("%f%f\n", p->prio, p->prio);					
+		temp = p->left;
+		p->left = p->right;
+		p->right = temp;
+		p = p->left;					
+		if(p->right == NULL){
+			printf("Broke %f%f\n", p->prio, p->prio);								
+			break;
+		}
+	}
+	return root;
+}
+node* meld(node* p, node* q){
+	//ger just nu falska minsta
+	node* subroot = NULL;	
+	node* temp = NULL;			
+	if(p->prio <= q->prio){
+		subroot = p;
+		p = p->right;					
+	}else{
+		subroot = q;	
+		q = q->right;
+	}	
+	//Start from subroot
+	temp = subroot;	
+	while(p->right != NULL || q->right != NULL){
+	//Iterate until none of the nodes has a right child node		
+		printf("p: %f\n", p->prio);
+		printf("q: %f\n", q->prio);					
+		if(p->prio <= q->prio){
+			temp->right = p;					
+			p = p->right;		
+		}else{
+			temp->right = q;			
+			q = q->right;		
+		}
+		temp = temp->right;			
+	}
+	//Add the last two nodes
+	if(p->prio <= q->prio){
+		temp->right = p;		
+		temp = temp->right;
+		temp->right = q;
+	}else{
+		temp->right = q;		
+		temp = temp->right;
+		temp->right = p;
+	}
+	return flip(subroot);	
+}
 void meldTest() {
 	node* p1 = make_node();
 	node* p2 = make_node();
@@ -74,49 +128,15 @@ void meldTest() {
 	q2->prio = 12;
 	p1->right = p2;
 	q1->right = q2;
-	node* test = meld2(p1, q1, NULL);
+	node* test = meld(p1, q1);
 	while(test != NULL){
 		printf("%f\n", test->prio);
-		test = test->right;
+		test = test->left;
 	}
 
 }
 
-void meld(node* p, node* q){
-	//ger just nu falska minsta
-	node* subroot = NULL;	
-	node* temp = NULL;			
-	if(p->prio <= q->prio){
-		subroot = p;//pop(p)					
-	}else{
-		subroot = q;//pop(q)	
-	}	
-	//Meld	
-	while(p != NULL && q != NULL){
-		//printf("%f\n", p->prio); 		
-		if(p->prio <= q->prio){
-			temp = p->right;			
-			p->right = q;
-			p = temp;		
-		}else{
-			temp = q->right;
-			q->right = p;
-			q = temp;		
-		}
-	}
-	while(subroot->right != NULL){
-		if(subroot->left != NULL){			
-			temp = subroot->left;			
-			subroot->left = subroot->right;					
-		}
-		temp = subroot->right;		
-		subroot->right = subroot->left;
-		subroot = temp;	
-		printf("%f\n", subroot->prio);	
-	}
-	//Meld	
-	return;	
-}
+
 void insert_kv(queue* q, int priority, int value){
 	//Inserts a new node with given priority and value in q		
 	//insert_node(q, e);
