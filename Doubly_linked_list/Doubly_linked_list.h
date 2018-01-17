@@ -88,7 +88,7 @@ void insert_node(queue* q, node* e){
 				node* after_e = current->next;					
 				after_e->prev = e;				
 				current->next = e;				
-				e->prev = current; current;											
+				e->prev = current;
 			 }
 		}	
 	}	
