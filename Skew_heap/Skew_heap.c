@@ -30,21 +30,37 @@ queue* make_queue(){
 	return q;
 }
 
-node* meld2(node* p, node* q) {
+node* meld2(node* p, node* q, node* root) {	
 	node* temp = NULL;
 //	if(p == NULL && q == NULL) return NULL;
-//	if(p == NULL) return q;
-//	if(q == NULL) return p;
+	if(p == NULL) return root;
+	if(q == NULL) return root;
 	if(p->prio <= q->prio) {
+		if(p->right == NULL) return root;		
+		if(root == NULL){
+			root = p;
+		}		
 		temp = p->right;
 		p->right = q;
-		meld2(temp, q);
+		printf("p<q\n");		
+		printf("p: %f\n", p->prio);
+		printf("temp: %f\n", temp->prio);
+		printf("q: %f\n", q->prio);		
+		meld2(temp, q, root);
 	}else{
+		if(q->right == NULL) return root;				
+		if(root == NULL){
+			root = q;
+		}		
 		temp = q->right;
 		q->right = p;
-		meld2(temp, p);
+		printf("p<q\n");		
+		printf("p: %f\n", p->prio);
+		printf("temp: %f\n", temp->prio);
+		printf("q: %f\n", q->prio);		
+		meld2(temp, p, root);
 	}
-	return NULL;
+	return root;
 }
 
 void meldTest() {
@@ -58,11 +74,12 @@ void meldTest() {
 	q2->prio = 12;
 	p1->right = p2;
 	q1->right = q2;
-	node* test = meld2(p1, q1);
+	node* test = meld2(p1, q1, NULL);
 	while(test != NULL){
 		printf("%f\n", test->prio);
 		test = test->right;
 	}
+
 }
 
 void meld(node* p, node* q){
