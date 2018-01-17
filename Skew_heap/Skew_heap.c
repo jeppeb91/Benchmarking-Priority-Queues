@@ -117,23 +117,74 @@ node* meld(node* p, node* q){
 	}
 	return flip(subroot);	
 }
+void tree_climber(node* root){
+//This methods goes from parent node to its left and right child
+//Prints the priority of each visited node
+	node* previous = NULL;	
+	while(1){	
+		printf("%f\n", root->prio);		
+		char c = getchar();
+		if(c == 'l'){
+			previous = root;			
+			root = root->left;
+		}
+		else if(c == 'r'){
+			previous = root;			
+			root = root->right;
+		}
+		else if(c == 'p'){
+			root = previous;
+		}		
+	}	
+}
 void meldTest() {
+	//Left test tree	
 	node* p1 = make_node();
 	node* p2 = make_node();
+	node* p3 = make_node();
+	node* p4 = make_node();
+	node* p5 = make_node();
+	node* p6 = make_node();
+	node* p7 = make_node();
+	
+	p1->prio = 1;
+	p2->prio = 50;
+	p3->prio = 10;
+	p4->prio = 13;
+	p5->prio = 20;
+	p6->prio = 16;
+	p7->prio = 25;
+	
+	p1->left = p2;
+	p1->right = p3;
+	p3->left = p4;
+	p3->right = p5;
+	p4->right = p6;
+	p5->left = p7;
+	
+	//Right test tree
 	node* q1 = make_node();
 	node* q2 = make_node();
-	p1->prio = 1;
-	p2->prio = 10;
-	q1->prio = 5;
-	q2->prio = 12;
-	p1->right = p2;
-	q1->right = q2;
-	node* test = meld(p1, q1);
-	while(test != NULL){
-		printf("%f\n", test->prio);
-		test = test->left;
-	}
+	node* q3 = make_node();
+	node* q4 = make_node();
+	node* q5 = make_node();
+	node* q6 = make_node();
 
+	q1->prio = 5;
+	q2->prio = 19;
+	q3->prio = 40;
+	q4->prio = 12;
+	q5->prio = 30;
+	q6->prio = 14;
+	
+	q1->left = q2;
+	q1->right = q4;
+	q2->left = q3;
+	q4->left = q5;
+	q4->right = q6;
+
+	node* test = meld(p1, q1);
+	tree_climber(test);
 }
 
 
