@@ -97,7 +97,7 @@ void insert_node(queue* q, node* e){
 	q->average = new_average;
 	q->size = new_size;	
 }
-void insert_kv(queue* q, int priority, int value){
+void insert_kv(queue* q, float priority, int value){
 	//Inserts a new node with given priority and value in q	
 	node* e =  make_node();
 	e->prio = priority;

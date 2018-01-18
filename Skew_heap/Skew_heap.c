@@ -30,6 +30,20 @@ queue* make_queue(){
 	return q;
 }
 
+node* flip(node* p){
+	node* root = p;	
+	node* temp = NULL;
+	while(1){
+		temp = p->left;
+		p->left = p->right;
+		p->right = temp;
+		p = p->left;					
+		if(p->right == NULL){
+			break;
+		}
+	}
+	return root;
+}
 node* meld2(node* p, node* q, node* root) {	
 	node* temp = NULL;
 //	if(p == NULL && q == NULL) return NULL;
@@ -60,62 +74,101 @@ node* meld2(node* p, node* q, node* root) {
 		printf("q: %f\n", q->prio);		
 		meld2(temp, p, root);
 	}
-	return root;
+	return flip(root);
 }
 
-node* flip(node* p){
-	node* root = p;	
-	node* temp = NULL;
-	while(1){
-		printf("%f%f\n", p->prio, p->prio);					
-		temp = p->left;
-		p->left = p->right;
-		p->right = temp;
-		p = p->left;					
-		if(p->right == NULL){
-			printf("Broke %f%f\n", p->prio, p->prio);								
-			break;
-		}
-	}
-	return root;
-}
 node* meld(node* p, node* q){
-	//ger just nu falska minsta
+	//ger just nu falska minsta	
+
 	node* subroot = NULL;	
-	node* temp = NULL;			
-	if(p->prio <= q->prio){
+	node* temp = NULL;						
+	if(p->prio <= q->prio){		
 		subroot = p;
-		p = p->right;					
-	}else{
+		p = p->right;	
+	}else{			
 		subroot = q;	
 		q = q->right;
-	}	
-	//Start from subroot
-	temp = subroot;	
-	while(p->right != NULL || q->right != NULL){
-	//Iterate until none of the nodes has a right child node		
-		printf("p: %f\n", p->prio);
-		printf("q: %f\n", q->prio);					
-		if(p->prio <= q->prio){
+	}				
+	if(p == NULL && q){
+		subroot->right = q;		
+		return flip(subroot);
+	}
+	if(q == NULL){
+		subroot->right = p;		
+		return flip(subroot);
+	}
+	//Start from subroot		
+	temp = subroot;		
+	while(p->right != NULL && q->right != NULL){							
+	//Iterate until none of the nodes has a right child node				
+		if(p->prio <= q->prio){						
 			temp->right = p;					
 			p = p->right;		
 		}else{
 			temp->right = q;			
 			q = q->right;		
 		}
-		temp = temp->right;			
+		temp = temp->right;	
 	}
-	//Add the last two nodes
-	if(p->prio <= q->prio){
+	while(p->right != NULL && p->prio <= q->prio){		
+		temp->right = p;
+		temp = temp->right;
+		p = p->right;		
+	}
+	while(q->right != NULL && q->prio < p->prio){		
+		temp->right = q;
+		temp = temp->right;
+		q = q->right;		
+	}
+	//Add the last nodes
+	
+	if(p->prio <= q->prio){				
 		temp->right = p;		
 		temp = temp->right;
-		temp->right = q;
-	}else{
+		temp->right = q;	
+	}else{				
 		temp->right = q;		
 		temp = temp->right;
 		temp->right = p;
 	}
 	return flip(subroot);	
+}
+
+void insert_node(queue* q, node* e){	
+	q->size ++;		
+	if(q->root == NULL && e != NULL){
+		q->root = e;	
+	}	
+	q->root = meld(q->root, e);	
+}
+void insert_kv(queue* q, float priority, int value){
+	//Inserts a new node with given priority and value in q		
+	printf("called");	
+	node* e = make_node();
+	e->prio = priority;
+	e->val = value;
+	insert_node(q, e);
+}
+node* pop(queue* q){	
+	//Pops the lowest priority from the queue
+	node* e = q->root;	
+	if(e->left == NULL && e->right == NULL){
+		return NULL;	
+	}
+	q->size --;
+	
+	if(e->left == NULL && e->right){
+		q->root = e->right;
+		return e;		
+	}
+	if(e->right == NULL && e->left){
+		q->root = e->left;
+		return e; 		
+	}
+	q->root = meld(e->left, e->right);	
+	e->left = NULL;
+	e->right = NULL;	
+	return e;
 }
 void tree_climber(node* root){
 //This methods goes from parent node to its left and right child
@@ -184,25 +237,29 @@ void meldTest() {
 	q4->right = q6;
 
 	node* test = meld(p1, q1);
-	tree_climber(test);
-}
-
-
-void insert_kv(queue* q, int priority, int value){
-	//Inserts a new node with given priority and value in q		
-	//insert_node(q, e);
-	return;
-}
-int pop(queue* q){	
-	//Pops the lowest priority from the queue
-	//For to equal priorities FIFO	
-	//return value;
-	return 0;
+	//node* test = meld2(p1, q1, NULL);
+	//tree_climber(test);
+	queue* q = make_queue();
+	q->root = test;
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	printf("%f\n", pop(q)->prio);
+	tree_climber(q->root);
 }
 
 int main(){
 	queue* q = make_queue();
-	node* n = make_node();	
+	int ITERATIONS = 100;
+	node* n = make_node();		
 	node* m = make_node();
 	node* o = make_node();
 	n->prio = 1;
