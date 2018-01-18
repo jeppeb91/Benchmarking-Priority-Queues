@@ -79,7 +79,6 @@ node* meld2(node* p, node* q, node* root) {
 
 node* meld(node* p, node* q){
 	//ger just nu falska minsta	
-
 	node* subroot = NULL;	
 	node* temp = NULL;						
 	if(p->prio <= q->prio){		
@@ -88,7 +87,7 @@ node* meld(node* p, node* q){
 	}else{			
 		subroot = q;	
 		q = q->right;
-	}				
+	}
 	if(p == NULL && q){
 		subroot->right = q;		
 		return flip(subroot);
@@ -137,13 +136,13 @@ node* meld(node* p, node* q){
 void insert_node(queue* q, node* e){	
 	q->size ++;		
 	if(q->root == NULL && e != NULL){
-		q->root = e;	
+		q->root = e;
+		return;
 	}	
 	q->root = meld(q->root, e);	
 }
 void insert_kv(queue* q, float priority, int value){
 	//Inserts a new node with given priority and value in q		
-	printf("called");	
 	node* e = make_node();
 	e->prio = priority;
 	e->val = value;
@@ -258,7 +257,15 @@ void meldTest() {
 
 int main(){
 	queue* q = make_queue();
-	int ITERATIONS = 100;
+	insert_kv(q, 2, 1);
+	int ITERATIONS = 10000000;
+	for(int i = 0; i < ITERATIONS; i++){
+		insert_kv(q, i, i);
+	}	
+	for(int i = 0; i < ITERATIONS; i++){
+		printf("%f\n", pop(q)->prio);
+	}
+	tree_climber(q->root);
 	node* n = make_node();		
 	node* m = make_node();
 	node* o = make_node();
@@ -267,6 +274,6 @@ int main(){
 	o->prio = 3;	
 	n->right = m;
 //	meld(n, o);
-	meldTest();
+	//meldTest();
 	return 0;
 }
