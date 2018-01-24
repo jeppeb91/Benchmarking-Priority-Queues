@@ -15,6 +15,7 @@ typedef struct node{
 	struct node* next;
 	struct node* prev;
 }node;
+
 node* make_node(){
 	node* n = (node*)malloc(sizeof(node));
 	n-> prio = 0;
@@ -23,6 +24,7 @@ node* make_node(){
 	n->prev = NULL;
 	return n;
 }
+
 queue* make_queue(){
 	queue* q = (queue*)malloc(sizeof(queue));
 	q->size = 0;
@@ -32,8 +34,8 @@ queue* make_queue(){
 	return q;
 }
 
-void insert_node(queue* q, node* e){
-	int priority = e->prio;	
+void insert_node(queue* q, node* e){	
+	float priority = e->prio;	
 	int old_size = q->size;	
 	int new_size = old_size + 1;	
 	float old_average = q->average;
@@ -71,10 +73,10 @@ void insert_node(queue* q, node* e){
 				current->next = e;				
 				e->prev = current;											
 			 }
-		}else{		
+		}else{											
 			node* current = q->first;			
 			while(current->prio < priority){				
-				current = current->next;			
+				current = current->next;
 			}			
 			if(current == q->first){					
 				//if none before				
@@ -84,11 +86,11 @@ void insert_node(queue* q, node* e){
 				q->first = e;						
 			}else{
 				//If its supposed to go between two
-				e->next = current->next;				
-				node* after_e = current->next;					
-				after_e->prev = e;				
-				current->next = e;				
-				e->prev = current;
+				node* before_e = current->prev;
+				before_e->next = e;										
+				e->next = current;
+				e->prev = before_e;				
+				current->prev = e;
 			 }
 		}	
 	}	
@@ -97,6 +99,7 @@ void insert_node(queue* q, node* e){
 	q->average = new_average;
 	q->size = new_size;	
 }
+
 void insert_kv(queue* q, float priority, int value){
 	//Inserts a new node with given priority and value in q	
 	node* e =  make_node();
@@ -104,9 +107,10 @@ void insert_kv(queue* q, float priority, int value){
 	e->val = value;		
 	insert_node(q, e);
 }
+
 node* pop(queue* q){	
 	//Pops the lowest priority from the queue
-	//For to equal priorities FIFO	
+	//For to equal priorities FIFO		
 	if(q == NULL){
 		return NULL;
 	}	
@@ -142,5 +146,3 @@ node* pop(queue* q){
 	q->average = new_average;
 	return e;
 }
-
-
