@@ -1,0 +1,18 @@
+set terminal png
+set output "Skew_inserts.png"
+
+set title "Benchmarking Skew heap inserts"
+
+set key left top
+
+set xlabel "Queue size"
+set ylabel"Insertion time (µs)"
+
+set xrange [0:9000]
+set yrange [0:800]
+
+plot	"exponential.dat" u 1:2 w lines title "exponential", \
+	"uniform09-11.dat" u 1:2 w lines title "uniform09-11", \
+	"unif0-2.dat" u 1:2 w lines title "unif0-2", \
+	"triangular.dat" u 1:2 w lines title "triangular"
+
