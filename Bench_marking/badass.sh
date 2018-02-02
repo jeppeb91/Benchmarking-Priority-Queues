@@ -90,7 +90,7 @@ EOF
 gnuplot << EOF
 
 	set terminal png
-	set key left top
+	set key right top
 
 	set xlabel "Queue size"
 	set ylabel"Removal time (µs)"
