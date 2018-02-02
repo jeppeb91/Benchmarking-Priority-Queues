@@ -34,7 +34,7 @@ int main(int argc, char **argv){
 	//c_start = clock();
 	gettimeofday(&start, NULL);	
 	for(int i = 1025; i < 10000; i++){
-		insert_node(q, nodes[i]);
+		nodes[i] = pop(q);
 		qsizes[i - 1025] = q->size;
 		gettimeofday(&stops[i - 1025], NULL);
 	}
@@ -44,6 +44,7 @@ int main(int argc, char **argv){
 
 	free(nodes);
 	c_stop = clock();
+	printf("%lu\n", c_stop);		
 	return 0;
 }
 

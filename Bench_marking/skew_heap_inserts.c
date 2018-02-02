@@ -12,7 +12,6 @@ int main(int argc, char **argv){
 	queue* q = make_queue();
 	node** nodes = malloc(sizeof(node*)*ITERATIONS);
 	int qsizes [8975];
-	srand(311);	
 	c_start = clock();	
 	
 	//Create all nodes and assign priorities and values	
