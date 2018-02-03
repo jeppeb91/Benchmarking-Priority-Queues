@@ -42,7 +42,7 @@ void insert_node(queue* q, node* e){
 	if(q == NULL || e == NULL){
 		return;
 	}
-	if(q->last == NULL){
+	if(q->size == 0){
 		//If there are no nodes in queue				
 		q->first = e;
 		q->last = e;
@@ -117,32 +117,24 @@ node* pop(queue* q){
 	if(q->size < 1){
 		return NULL;
 	}	
-	if(q->size == 1){		
-		node* e = q->first;				
-		float priority =q->first->prio;			
-		e->next = NULL;
-		q->last = NULL;
-		q->first = NULL;	
+	if(q->size == 1){				
+		//update stats		
 		q->size = 0;			
-		
-		//update stats
 		q->size = 0;
-		q->average = 0;	
-		return e;	
+		q->average = 0;					
+		return q->last;	
 	}
-	node* new_first = q->first->next;	
+	node* new_first = q->first->next;
 	node* e = q->first;				
 	e->next = NULL;		
-	float priority =q->first->prio;		
-	new_first->prev = NULL;
-	q->first = new_first;		
-	
+	float priority =q->first->prio;
+	q->first = new_first;
 	//update stats
 	int size = q->size;
 	float old_average = q->average;		
 	float new_average = (float)(old_average * size - priority)/(size -1);
-	
 	q->size = size - 1;
 	q->average = new_average;
+	//printf("lower popped prio:%f size: %dfirstprio: %f\n", e->prio, q->size, q->first->prio);
 	return e;
 }

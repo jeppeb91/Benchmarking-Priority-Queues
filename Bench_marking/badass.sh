@@ -7,9 +7,9 @@ sudo nice -n -20 ./bin/skew_heap_inserts "dists/exponential1.txt" > out/skew/ins
 
 
 #Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt" > out/linked/inserts_unif09-11.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt" > out/linked/inserts_triangular.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt" > out/linked/inserts_exponential.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt" #> out/linked/inserts_unif09-11.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt" #> out/linked/inserts_triangular.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt" #>out/linked/inserts_exponential.dat
 
 
 #Run benchmarks with highest priorities using specified input file and output data
@@ -51,8 +51,8 @@ gnuplot << EOF
 	set xlabel "Queue size"
 	set ylabel"Insertion time (µs)"
 
-	set xrange [0:10000]
-	set yrange [0:70000]
+	set xrange [0:1000]
+	set yrange [0:500]
 
 	set output './graphs/Linked_list_inserts.png'
 	set title "Benchmarking Linked list inserts"
