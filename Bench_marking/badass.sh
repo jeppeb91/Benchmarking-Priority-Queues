@@ -32,8 +32,8 @@ gnuplot << EOF
 	set xlabel "Queue size"
 	set ylabel"Insertion time (µs)"
 
-	set xrange [0:9000]
-	set yrange [0:800]
+	set xrange [0:1000]
+	set yrange [0:200]
 
 	set output './graphs/Skew_inserts.png'
 	set title "Benchmarking Skew heap inserts"
@@ -52,7 +52,7 @@ gnuplot << EOF
 	set ylabel"Insertion time (µs)"
 
 	set xrange [0:1000]
-	set yrange [0:500]
+	set yrange [0:300]
 
 	set output './graphs/Linked_list_inserts.png'
 	set title "Benchmarking Linked list inserts"
@@ -71,8 +71,8 @@ gnuplot << EOF
 	set xlabel "Queue size"
 	set ylabel"Insertion time (µs)"
 
-	set xrange [0:9000]
-	set yrange [0:5000]
+	set xrange [0:1000]
+	set yrange [0:300]
 
 	set output './graphs/Insertion_comparison.png'
 	set title "Linked list vs Skew heap insertions"
