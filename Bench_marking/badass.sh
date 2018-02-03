@@ -7,9 +7,9 @@ sudo nice -n -20 ./bin/skew_heap_inserts "dists/exponential1.txt" > out/skew/ins
 
 
 #Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt" #> out/linked/inserts_unif09-11.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt" #> out/linked/inserts_triangular.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt" #>out/linked/inserts_exponential.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt" > out/linked/inserts_unif09-11.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt" > out/linked/inserts_triangular.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt" >out/linked/inserts_exponential.dat
 
 
 #Run benchmarks with highest priorities using specified input file and output data

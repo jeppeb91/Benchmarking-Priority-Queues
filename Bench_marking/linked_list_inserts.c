@@ -12,7 +12,7 @@ void iteration(float* rands, int iteration_no, unsigned long* rounds){
 	node** nodes = malloc(sizeof(node*)*ITERATIONS);	
 	for(int i = 0; i < ITERATIONS; i++){		
 		nodes[i] = make_node();
-		nodes[i]->prio = rands[i + 2000 * iteration_no];
+		nodes[i]->prio = rands[(i + 2000 * iteration_no) % 10000];
 		nodes[i]->val = i;
 	}
 	//Iterate Up and down first for stability		
@@ -36,18 +36,27 @@ void iteration(float* rands, int iteration_no, unsigned long* rounds){
 	free(q);	
 	free(nodes);	
 }
-int main(int argc, char **argv){
-	unsigned long* rounds = malloc(sizeof(unsigned long)*4875);
-	float* rands = read_priorities(argv[1]);	
-
-	iteration(rands, 0, rounds);
-	iteration(rands, 1, rounds);
-	iteration(rands, 2, rounds);
-	iteration(rands, 3, rounds);
-	iteration(rands, 4, rounds);	
-	for(int i = 3900; i < 4875; i++){
-		printf("%d\t%lu\n", i + 25 - 3900, rounds[i]); 	
+void print_avg(unsigned long* rounds, int repeats){
+	unsigned long sum = 0;	
+	for(int i = 0; i < 975; i++){
+		sum = 0;
+		for(int j = 0; j < repeats; j++){
+			sum = sum + rounds[i + 975*j];		
+		}		
+		printf("%d\t%lu\n", i + 25, sum/repeats); 	
 	}
+}
+void bench(int repeats, float* rands){
+	unsigned long* rounds = malloc(sizeof(unsigned long)*975*repeats);
+	for(int i = 0; i < repeats; i++){
+		iteration(rands, i, rounds);		
+	}
+	print_avg(rounds, repeats);
+}
+int main(int argc, char **argv){
+	unsigned long* rounds = malloc(sizeof(unsigned long)*975*10);
+	float* rands = read_priorities(argv[1]);
+	bench(100, rands);
 	return 0;
 }
 
