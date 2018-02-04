@@ -17,7 +17,7 @@ char* parse_out_path(char* dist, char* filename)
 	strcat(&result[strlen(&dist[6]) + strlen(base_path)], filename);
 	return result;
 }
-void iteration(float* rands, int iteration_no, unsigned long* rounds){
+void iteration(float* rands, int iteration_no, unsigned long* inserts, unsigned long* pops){
 	queue* q = make_queue();	
 	struct timeval start;
 	struct timeval stops [975];
@@ -44,22 +44,36 @@ void iteration(float* rands, int iteration_no, unsigned long* rounds){
 		gettimeofday(&stops[i - 1025], NULL);
 	}
 	for(int i = 0; i < 975; i++){
-		rounds[i + 975 * iteration_no] = stops[i].tv_usec - start.tv_usec; 	
+		inserts[i + 975 * iteration_no] = stops[i].tv_usec - start.tv_usec; 	
 	}
-	free(q);	
+	
+	//pops
+	gettimeofday(&start, NULL);	
+	for(int i = 0; i < 975; i++){
+		nodes[i] = pop(q);
+		gettimeofday(&stops[i], NULL);
+	}
+	for(int i = 0; i < 975; i++){
+		pops[i + 975 * iteration_no] = stops[i].tv_usec - start.tv_usec; 	
+	}
+	free(q);
 	free(nodes);	
 }
-void print_avg(unsigned long* rounds, int repeats, FILE* fp){
+void print_avg(unsigned long* rounds, int repeats, FILE* fp, int pop){
 	unsigned long sum = 0;	
 	for(int i = 0; i < 975; i++){
 		sum = 0;
 		for(int j = 0; j < repeats; j++){
 			sum = sum + rounds[i + 975*j];		
 		}		
-		fprintf(fp, "%d\t%lu\n", i + 25, sum/repeats); 	
+		if(pop == 0){			
+			fprintf(fp, "%d\t%lu\n", i + 25, sum/repeats);
+		}else{
+			fprintf(fp, "%d\t%lu\n", 1000 - i, sum/repeats);			
+		}
 	}
 }
-void print_worst(unsigned long* rounds, int repeats, FILE* fp){
+void print_worst(unsigned long* rounds, int repeats, FILE* fp, int pop){
 	unsigned long worst = 0;	
 	for(int i = 0; i < 975; i++){
 		worst = rounds[i];
@@ -68,26 +82,41 @@ void print_worst(unsigned long* rounds, int repeats, FILE* fp){
 				worst = rounds[i + 975 * j];
 			}		
 		}		
-		fprintf(fp, "%d\t%lu\n", i + 25, worst); 	
+		if(pop == 0){			
+			fprintf(fp, "%d\t%lu\n", i + 25, worst);
+		}else{
+			fprintf(fp, "%d\t%lu\n", 1000 - i, worst);			
+		}	
 	}
 }
 void bench(int repeats, float* rands, char* dist){
-	unsigned long* rounds = malloc(sizeof(unsigned long)*975*repeats);
+	unsigned long* inserts = malloc(sizeof(unsigned long)*975*repeats);
+	unsigned long* pops = malloc(sizeof(unsigned long)*975*repeats);	
+	//Real round
 	for(int i = 0; i < repeats; i++){
-		iteration(rands, i, rounds);
+		iteration(rands, i, inserts, pops);
 	}
 	char * path = parse_out_path(dist, "_inserts_worst.dat");
 	FILE* fp = fopen(path, "w");
-	print_worst(rounds, repeats, fp);
+	print_worst(inserts, repeats, fp, 0);
 	fclose(fp);
 	
 	path = parse_out_path(dist, "_inserts_avg.dat");
 	fp = fopen(path, "w");
-	print_avg(rounds, repeats, fp);
+	print_avg(inserts, repeats, fp, 0);
+	fclose(fp);
+
+	path = parse_out_path(dist, "_pops_worst.dat");
+	fp = fopen(path, "w");
+	print_worst(pops, repeats, fp, 1);
+	fclose(fp);
+
+	path = parse_out_path(dist, "_pops_avg.dat");
+	fp = fopen(path, "w");
+	print_avg(pops, repeats, fp, 1);
 	fclose(fp);
 }
 int main(int argc, char **argv){
-	unsigned long* rounds = malloc(sizeof(unsigned long)*975*10);
 	float* rands = read_priorities(argv[1]);
 	bench(5, rands, argv[1]);
 	return 0;
