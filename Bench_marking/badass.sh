@@ -1,26 +1,16 @@
 #!/bin/bash
 
 #Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/skew_heap_inserts "dists/unif09-11.txt" #> out/skew/inserts_unif09-11.dat
-sudo nice -n -20 ./bin/skew_heap_inserts "dists/triangular.txt" #> out/skew/inserts_triangular.dat
-sudo nice -n -20 ./bin/skew_heap_inserts "dists/exponential1.txt" #> out/skew/inserts_exponential.dat
+sudo nice -n -20 ./bin/skew_heap_inserts "dists/unif09-11.txt"
+sudo nice -n -20 ./bin/skew_heap_inserts "dists/triangular.txt"
+sudo nice -n -20 ./bin/skew_heap_inserts "dists/exponential1.txt"
 
 
 #Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt" #> out/linked/inserts_unif09-11.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt" #> out/linked/inserts_triangular.dat
-sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt" #>out/linked/inserts_exponential.dat
+sudo nice -n -20 ./bin/linked_list_inserts "dists/unif09-11.txt"
+sudo nice -n -20 ./bin/linked_list_inserts "dists/triangular.txt"
+sudo nice -n -20 ./bin/linked_list_inserts "dists/exponential1.txt"
 
-
-#Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/skew_heap_pops "dists/unif09-11.txt" #> out/skew/pops_unif09-11.dat
-sudo nice -n -20 ./bin/skew_heap_pops "dists/triangular.txt" #> out/skew/pops_triangular.dat
-sudo nice -n -20 ./bin/skew_heap_pops "dists/exponential1.txt" #> out/skew/pops_exponential.dat
-
-#Run benchmarks with highest priorities using specified input file and output data
-sudo nice -n -20 ./bin/linked_list_pops "dists/unif09-11.txt" #> out/linked/pops_unif09-11.dat
-sudo nice -n -20 ./bin/linked_list_pops "dists/triangular.txt" #> out/linked/pops_triangular.dat
-sudo nice -n -20 ./bin/linked_list_pops "dists/exponential1.txt" #> out/linked/pops_exponential.dat
 
 #Plot the results
 
